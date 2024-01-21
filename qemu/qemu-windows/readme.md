@@ -74,19 +74,13 @@ if not exist "%QEMU_BINARY_PATH%" (
 
 :: MISCS
 :: -------------------
+:: we want to store re-usable assets inside our qemu binary directory
 
 set QEMU_MISC_PATH=%QEMU_BINARY_PATH%/misc
-:: use this script file name
-set QEMU_DISK_PATH=%QEMU_BINARY_PATH%/disks/%~n0/
 
 :: create misc directory
 if not exist "%QEMU_MISC_PATH%" (
   mkdir "%QEMU_MISC_PATH%"
-)
-
-:: create disk directory
-if not exist "%QEMU_DISK_PATH%" (
-  mkdir "%QEMU_DISK_PATH%"
 )
 
 :: FETCHING - ISO
@@ -98,8 +92,6 @@ SET URL=https://gemmei.ftp.acc.umu.se/debian-cd/current/amd64/iso-cd/debian-12.4
 if not exist "%ISO_PATH%" (
 	curl -A "Wget" -o %ISO_PATH% "%URL%"
 )
-
-:: --------------------------------------
 
 :: FETCHING - BIOS
 :: -------------------
@@ -114,6 +106,14 @@ if not exist "%BIOS_PATH%" (
 
 :: VIRTUAL-MACHINE
 :: -------------------
+
+:: use this script file name
+set QEMU_DISK_PATH=%QEMU_BINARY_PATH%/disks/%~n0/
+
+:: create disk directory
+if not exist "%QEMU_DISK_PATH%" (
+  mkdir "%QEMU_DISK_PATH%"
+)
 
 :: disk - a
 :: -------------------
