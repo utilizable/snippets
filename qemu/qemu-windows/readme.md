@@ -112,12 +112,7 @@ if not exist "%BIOS_PATH%" (
 	curl -A "Wget" -o %BIOS_PATH% "%URL%"
 )
 
-:: --------------------------------------
-
 :: VIRTUAL-MACHINE
-:: -------------------
-
-:: DISKS
 :: -------------------
 
 :: disk - a
@@ -137,7 +132,7 @@ if not exist "%QEMU_VM_DISK_B_PATH%" (
   %QEMU_BINARY_PATH%/qemu-img create -f qcow2 %QEMU_VM_DISK_B_PATH% %QEMU_VM_DISK_SIZE%
 )
 
-:: INSTANCE
+:: instance
 :: -------------------
 
 set QEMU_VM_SSH_PORT=8022
