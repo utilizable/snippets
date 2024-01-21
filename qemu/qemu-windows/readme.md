@@ -59,7 +59,6 @@ setlocal EnableDelayedExpansion
 :: FETCHING - QEMU
 :: -------------------
 
-:: Set the URL and output path
 set URL=https://qemu.weilnetz.de/w64/2023/qemu-w64-setup-20231224.exe
 set QEMU_DOWNLOAD_PATH=%USERPROFILE%/Downloads/qemu-w64-setup-20231224.exe
 set QEMU_BINARY_PATH=%USERPROFILE%/qemu_core
@@ -77,6 +76,7 @@ if not exist "%QEMU_BINARY_PATH%" (
 :: -------------------
 
 set QEMU_MISC_PATH=%QEMU_BINARY_PATH%/misc
+:: use this script file name
 set QEMU_DISK_PATH=%QEMU_BINARY_PATH%/disks/%~n0/
 
 :: create misc directory
