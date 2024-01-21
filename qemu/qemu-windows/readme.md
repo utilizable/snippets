@@ -50,16 +50,38 @@ cd "$env:USERPROFILE/Downloads"
     -bios ./qemu/edk2-x86_64-code.fd
 ' | Invoke-Expression  2> $null
 ```
-## Invoke script
+## Invoke script (all-in one)
 
 ```cmd
 @echo off
 setlocal EnableDelayedExpansion
 
+:: FETCHING - QEMU
+:: -------------------
+
+:: Set the URL and output path
+set URL=https://qemu.weilnetz.de/w64/2023/qemu-w64-setup-20231224.exe
+set QEMU_DOWNLOAD_PATH=%USERPROFILE%/Downloads/qemu-w64-setup-20231224.exe
+set QEMU_BINARY_PATH=%USERPROFILE%/qemu_core
+set QEMU_MISC_PATH=%QEMU_BINARY_PATH%/misc
+
+:: fetch iso 
+if not exist "%QEMU_DOWNLOAD_PATH%" (
+  curl -A "Wget" -o "%QEMU_DOWNLOAD_PATH%" "%URL%"
+)
+:: unzip iso
+if not exist "%QEMU_BINARY_PATH%" (
+  7z.exe x "%QEMU_DOWNLOAD_PATH%" -o%QEMU_BINARY_PATH% -y
+)
+:: create misc directory
+if not exist "%QEMU_MISC_PATH%" (
+  mkdir "%QEMU_MISC_PATH%"
+)
+
 :: FETCHING - ISO
 :: -------------------
 
-SET ISO_PATH=debian-12.4.0-amd64-netinst.iso
+SET ISO_PATH=%QEMU_MISC_PATH%/debian-12.4.0-amd64-netinst.iso
 SET URL=https://gemmei.ftp.acc.umu.se/debian-cd/current/amd64/iso-cd/debian-12.4.0-amd64-netinst.iso
 
 if not exist "%ISO_PATH%" (
@@ -72,7 +94,7 @@ if not exist "%ISO_PATH%" (
 :: -------------------
 :: https://github.com/BlankOn/ovmf-blobs/blob/master/bios64.bin
 
-SET BIOS_PATH=bios64.bin
+SET BIOS_PATH=%QEMU_MISC_PATH%/bios64.bin
 SET URL=https://raw.githubusercontent.com/BlankOn/ovmf-blobs/c9379b95fc2b1bf3a8ed90de0f60bd4f0a8b258b/bios64.bin
 
 if not exist "%BIOS_PATH%" (
@@ -94,18 +116,16 @@ set QEMU_BINARY=D:/qemu/qemu-core
 set QEMU_VM_DISK_NAME=disk-a
 set QEMU_VM_DISK_SIZE=15G
 set QEMU_VM_DISK_A_PATH=%QEMU_VM_DISK_NAME%
-
 if not exist "%QEMU_VM_DISK_A_PATH%" (
-  %QEMU_BINARY%/qemu-img create -f qcow2 %QEMU_VM_DISK_A_PATH% %QEMU_VM_DISK_SIZE%
+  %QEMU_BINARY_PATH%/qemu-img create -f qcow2 %QEMU_VM_DISK_A_PATH% %QEMU_VM_DISK_SIZE%
 )
 :: disk - b
 :: -------------------
 set QEMU_VM_DISK_NAME=disk-b
 set QEMU_VM_DISK_SIZE=50G
 set QEMU_VM_DISK_B_PATH=%QEMU_VM_DISK_NAME%
-
 if not exist "%QEMU_VM_DISK_B_PATH%" (
-  %QEMU_BINARY%/qemu-img create -f qcow2 %QEMU_VM_DISK_B_PATH% %QEMU_VM_DISK_SIZE%
+  %QEMU_BINARY_PATH%/qemu-img create -f qcow2 %QEMU_VM_DISK_B_PATH% %QEMU_VM_DISK_SIZE%
 )
 :: VIRTUAL-MACHINE - INSTANCE
 :: -------------------
@@ -114,7 +134,7 @@ set QEMU_VM_BIOS=./bios64.bin
 set QEMU_VM_SSH_PORT=8022
 
 SET INVOKE=^
-  %QEMU_BINARY%/qemu-system-x86_64.exe ^
+  %QEMU_BINARY_PATH%/qemu-system-x86_64.exe ^
   -accel whpx,kernel-irqchip=off ^
   -m 2048 ^
   -boot d ^
