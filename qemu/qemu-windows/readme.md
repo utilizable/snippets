@@ -63,7 +63,6 @@ setlocal EnableDelayedExpansion
 set URL=https://qemu.weilnetz.de/w64/2023/qemu-w64-setup-20231224.exe
 set QEMU_DOWNLOAD_PATH=%USERPROFILE%/Downloads/qemu-w64-setup-20231224.exe
 set QEMU_BINARY_PATH=%USERPROFILE%/qemu_core
-set QEMU_MISC_PATH=%QEMU_BINARY_PATH%/misc
 
 :: fetch iso 
 if not exist "%QEMU_DOWNLOAD_PATH%" (
@@ -73,9 +72,21 @@ if not exist "%QEMU_DOWNLOAD_PATH%" (
 if not exist "%QEMU_BINARY_PATH%" (
   7z.exe x "%QEMU_DOWNLOAD_PATH%" -o%QEMU_BINARY_PATH% -y
 )
+
+:: MISCS
+:: -------------------
+
+set QEMU_MISC_PATH=%QEMU_BINARY_PATH%/misc
+set QEMU_DISK_PATH=%QEMU_BINARY_PATH%/disks/%~n0/
+
 :: create misc directory
 if not exist "%QEMU_MISC_PATH%" (
   mkdir "%QEMU_MISC_PATH%"
+)
+
+:: create disk directory
+if not exist "%QEMU_DISK_PATH%" (
+  mkdir "%QEMU_DISK_PATH%"
 )
 
 :: FETCHING - ISO
@@ -106,16 +117,14 @@ if not exist "%BIOS_PATH%" (
 :: VIRTUAL-MACHINE
 :: -------------------
 
-set QEMU_BINARY=D:/qemu/qemu-core
-
-:: VIRTUAL-MACHINE - DISKS
+:: DISKS
 :: -------------------
 
 :: disk - a
 :: -------------------
 set QEMU_VM_DISK_NAME=disk-a
 set QEMU_VM_DISK_SIZE=15G
-set QEMU_VM_DISK_A_PATH=%QEMU_VM_DISK_NAME%
+set QEMU_VM_DISK_A_PATH=%QEMU_DISK_PATH%/%QEMU_VM_DISK_NAME%
 if not exist "%QEMU_VM_DISK_A_PATH%" (
   %QEMU_BINARY_PATH%/qemu-img create -f qcow2 %QEMU_VM_DISK_A_PATH% %QEMU_VM_DISK_SIZE%
 )
@@ -123,14 +132,14 @@ if not exist "%QEMU_VM_DISK_A_PATH%" (
 :: -------------------
 set QEMU_VM_DISK_NAME=disk-b
 set QEMU_VM_DISK_SIZE=50G
-set QEMU_VM_DISK_B_PATH=%QEMU_VM_DISK_NAME%
+set QEMU_VM_DISK_B_PATH=%QEMU_DISK_PATH%/%QEMU_VM_DISK_NAME%
 if not exist "%QEMU_VM_DISK_B_PATH%" (
   %QEMU_BINARY_PATH%/qemu-img create -f qcow2 %QEMU_VM_DISK_B_PATH% %QEMU_VM_DISK_SIZE%
 )
-:: VIRTUAL-MACHINE - INSTANCE
+
+:: INSTANCE
 :: -------------------
 
-set QEMU_VM_BIOS=./bios64.bin
 set QEMU_VM_SSH_PORT=8022
 
 SET INVOKE=^
