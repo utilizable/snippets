@@ -90,7 +90,7 @@ SET ISO_PATH=%QEMU_MISC_PATH%/debian-12.4.0-amd64-netinst.iso
 SET URL=https://gemmei.ftp.acc.umu.se/debian-cd/current/amd64/iso-cd/debian-12.4.0-amd64-netinst.iso
 
 if not exist "%ISO_PATH%" (
-	curl -A "Wget" -o %ISO_PATH% "%URL%"
+  curl -A "Wget" -o %ISO_PATH% "%URL%"
 )
 
 :: FETCHING - BIOS
@@ -101,7 +101,7 @@ SET BIOS_PATH=%QEMU_MISC_PATH%/bios64.bin
 SET URL=https://raw.githubusercontent.com/BlankOn/ovmf-blobs/c9379b95fc2b1bf3a8ed90de0f60bd4f0a8b258b/bios64.bin
 
 if not exist "%BIOS_PATH%" (
-	curl -A "Wget" -o %BIOS_PATH% "%URL%"
+  curl -A "Wget" -o %BIOS_PATH% "%URL%"
 )
 
 :: VIRTUAL-MACHINE
