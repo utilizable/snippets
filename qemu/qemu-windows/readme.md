@@ -47,7 +47,7 @@ cd "$env:USERPROFILE/Downloads"
     -hda ./qemu/disk `
     -cdrom "./deb-12-net.iso" ^
     # Optionaly usage of UEFI bios
-    -bios ./qemu/edk2-x86_64-code.fd
+    -bios ./bios64.bin
 ' | Invoke-Expression  2> $null
 ```
 ## Invoke script (all-in one)
