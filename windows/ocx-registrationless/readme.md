@@ -1,4 +1,4 @@
-# OCX - Registration Less
+# OCX - RegistrationLess
 
 This is a tough piece of cake, especially when you don't have any info about what to add to the manifest file.
 
