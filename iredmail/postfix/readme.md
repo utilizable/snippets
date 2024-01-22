@@ -1,6 +1,6 @@
 ## POSTFIX SMTP RELAYHOST
 
-Open your postfix configuration file using your favorite vi editor.
+Open your postfix configuration file using your editor.
 
 ```sh
 vi /etc/postfix/main.cf
