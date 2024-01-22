@@ -1,5 +1,5 @@
 <!-- ABOUT THE PROJECT -->
-## Nvidia offloading
+## Nvidia Offloading
 
 Below you have example how to combine NVIDIA and Intel-integra display outputs.
 
