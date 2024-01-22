@@ -56,7 +56,7 @@ In case when you trying to connect into EKS from heavy secured comapny, you need
 ```sh
 export no_proxy=localhost,127.0.0.0,127.0.1.1,127.0.1.1,local.home,.https://eks.amazonaws.com,.https://organization.com,organization.com
 ```
-You can use [px](https://github.com/genotrance/px) tool to sustain proxy connection
+You can use [px](https://github.com/genotrance/px) tool to sustain proxy connection.
 
 ```ps
 taskkill /F /IM px.exe
