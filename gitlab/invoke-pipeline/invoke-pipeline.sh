@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------------------
-#    invokePipeline.sh
+#    invoke-pipeline.sh
 #    Purpose: example how to trigger pipeline using cli
 #
 #    @author 
