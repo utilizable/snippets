@@ -1,0 +1,11 @@
+[Unit]
+Description=Assing vm hostname based on ip
+
+[Service]
+User=root
+WorkingDirectory=/root/ScriptsBundle/AutoVmHostName
+ExecStart=/bin/bash -c /root/ScriptsBundle/AutoVmHostName/AutoVmHostName.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
