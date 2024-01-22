@@ -1,0 +1,92 @@
+version: '3.2'
+services:
+
+  web:
+    hostname: 'keycloak-web'
+    container_name: 'keycloak-web'
+    build:
+      context: './'
+      dockerfile: 'nginx/dockerfile'
+    volumes:
+      - type: "bind"
+        source: "${PWD}/droot/web/vhost.conf"
+        target: "/etc/nginx/conf.d/vhost.conf"
+    networks:
+      - 'external'
+      - 'internal'
+    healthcheck:
+      interval: '5s'
+      retries: '15'
+      timeout: '2s'
+      test: 
+        - "CMD"
+        - "service" 
+        - "nginx"
+        - "status"
+    ports:
+      - '443:443'
+    depends_on:
+      - 'app'
+
+  db:
+    hostname: 'keycloak-db'
+    container_name: 'keycloak-db'
+    image: 'mysql'
+    volumes:
+    - type: "bind"
+      source: "${PWD}/droot/db/docker-entrypoint-initdb.d"
+      target: "/docker-entrypoint-initdb.d/"
+    networks:
+      - 'internal'
+    healthcheck:
+      interval: '5s'
+      retries: '15'
+      timeout: '10s'
+      test: 
+      - "CMD"
+      - "mysqladmin"
+      - "-uroot"
+      - "-plocal"
+      - "ping"
+      - "-h"
+      - "localhost"
+    environment:
+      MYSQL_ROOT_PASSWORD: 'local'
+
+  app:
+    hostname: 'keycloak-app'
+    container_name: 'keycloak-app'
+    build:
+      context: './'
+      dockerfile: '${PWD}/droot/app/dockerfile'
+    networks:
+      - 'internal'
+    healthcheck:
+      interval: '5s'
+      timeout: '2s'
+      retries: '15'
+      test: 
+        - "CMD"
+        - "curl -f"
+        - "http://localhost:8080/keycloak/"
+    depends_on:
+      - 'db'
+    environment:
+      KEYCLOAK_DATASOURCE_URL: 'jdbc:mysql://keycloak-database:3306/keycloak'
+      KC_DB_USERNAME: 'root'
+      KC_DB_PASSWORD: 'local'
+      KC_HOSTNAME_HTTPS_STRICT: 'false'
+      KC_HOSTNAME_STRICT: 'false'
+      KC_LOG_LEVEL: 'info'
+      KC_PROXY: 'edge'
+      KC_HTTP_ENABLED: 'true'
+      KC_HOST_NAME: '/keycloak'
+      KEYCLOAK_ADMIN: 'root' 
+      KEYCLOAK_ADMIN_PASSWORD: 'local'
+      REDIRECT_SOCKET: 'proxy-https'
+      PROXY_ADDRESS_FORWARDING: 'true'
+
+networks:
+  internal:
+  external:
+

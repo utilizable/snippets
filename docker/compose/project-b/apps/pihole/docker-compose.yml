@@ -1,0 +1,53 @@
+version: '3.2'
+
+services:
+
+  web:
+    hostname: 'pihole-web'
+    container_name: 'pihole-web'
+    build:
+      context: '../'
+      dockerfile: 'nginx/dockerfile'
+    volumes:
+      - type: "bind"
+        source: "${PWD}/droot/web/vhost.conf"
+        target: "/etc/nginx/conf.d/vhost.conf"
+    networks:
+      - 'external'
+      - 'internal'
+    healthcheck:
+      interval: '5s'
+      retries: '15'
+      timeout: '2s'
+      test: 
+        - "CMD"
+        - "service" 
+        - "nginx"
+        - "status"
+    ports:
+      - '443:443'
+    depends_on:
+      - 'app'
+
+  app:
+    hostname: 'pihole-app'
+    container_name: 'pihole-app'
+    image: 'pihole/pihole:latest'
+    # For DHCP it is recommended to remove these ports and instead add: network_mode: "host"
+    #    network_mode: 'host'
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "80:80/tcp"
+    environment:
+      TZ: 'Europe/Warsaw'
+      WEBPASSWORD: 'local'
+    cap_add:
+      - 'NET_ADMIN'
+    networks:
+      - 'internal'
+
+networks:
+  external:
+  internal:

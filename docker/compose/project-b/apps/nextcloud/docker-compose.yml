@@ -1,0 +1,85 @@
+version: '3.5'
+services:
+  web:
+    hostname: 'nextcloud-web'
+    container_name: 'nextcloud-web'
+    build:
+      context: '../'
+      dockerfile: 'nginx/dockerfile'
+    volumes:
+      - 'rootfs:/var/www/nextcloud/'
+      - type: "bind"
+        source: "${PWD}/droot/web/vhost.conf"
+        target: "/etc/nginx/conf.d/vhost.conf"
+    networks:
+      - 'internal'
+      - 'external'
+    healthcheck:
+      interval: '5s'
+      retries: '15'
+      timeout: '2s'
+      test: 
+        - "CMD"
+        - "service" 
+        - "nginx"
+        - "status"
+    ports:
+      #      - '443:443'
+      - '9001:9001'
+    expose:
+      - '443'
+    depends_on:
+      - 'app'
+
+  db:
+    hostname: 'nextcloud-db'
+    container_name: 'nextcloud-db'
+    image: 'mysql'
+    volumes:
+    - type: "bind"
+      source: "${PWD}/droot/db/docker-entrypoint-initdb.d"
+      target: "/docker-entrypoint-initdb.d/"
+    networks:
+      - 'internal'
+    healthcheck:
+      interval: '5s'
+      retries: '15'
+      timeout: '10s'
+      test: 
+      - "CMD"
+      - "mysqladmin"
+      - "-uroot"
+      - "-plocal"
+      - "ping"
+      - "-h"
+      - "localhost"
+    environment:
+      MYSQL_ROOT_PASSWORD: 'local'
+
+  app:
+    hostname: 'nextcloud-app'
+    container_name: 'nextcloud-app'
+    build:
+      context: './'
+      dockerfile: '${PWD}/droot/app/dockerfile'
+    volumes:
+      - 'rootfs:/var/www/html/'
+    networks:
+      - 'internal'
+    depends_on:
+      - 'db'
+    environment:
+      MYSQL_HOST: nextcloud-db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: local
+      MYSQL_DATABASE: nextcloud
+      TRUSTED_PROXIES: nextcloud-web
+      NEXTCLOUD_TRUSTED_DOMAINS: deb10-docker
+
+networks:
+  internal:
+  external:
+
+volumes:
+  rootfs:
+    driver: 'local'

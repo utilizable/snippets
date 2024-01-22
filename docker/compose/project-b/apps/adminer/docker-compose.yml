@@ -1,0 +1,43 @@
+version: '3.2'
+
+services:
+
+  web:
+    hostname: 'adminer-frontend'
+    container_name: 'adminer-frontend'
+    build:
+      context: './apps/'
+      dockerfile: '/nginx/dockerfile'
+    volumes:
+      - type: "bind"
+        source: "${PWD}/droot/web/vhost.conf"
+        target: "/etc/nginx/conf.d/vhost.conf"
+    networks:
+      - 'external'
+      - 'internal'
+    healthcheck:
+      interval: '5s'
+      retries: '15'
+      timeout: '2s'
+      test: 
+        - "CMD"
+        - "service" 
+        - "nginx"
+        - "status"
+    ports:
+      - '443:443'
+    depends_on:
+      - 'app'
+
+  app:
+    hostname: 'adminer-app'
+    container_name: 'adminer-app'
+    image: 'adminer:latest'
+    ports:
+      - '8080:8080'
+    networks:
+      - 'internal'
+
+networks:
+  external:
+  internal:
