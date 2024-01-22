@@ -1,2 +1,2 @@
 # snippets
-📚 Various configuration snippets and micro-scripts. 
+📚 Various configurations, snippets and micro-scripts. 
