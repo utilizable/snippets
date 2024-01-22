@@ -1,0 +1,4 @@
+FROM nginx:latest
+
+WORKDIR /etc/nginx
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout cert.key -out cert.crt -subj "/C=/ST=/L=/O=/OU=/CN=localhost"

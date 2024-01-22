@@ -1,0 +1,46 @@
+version: '3.2'
+
+volumes:
+  mysql_schemas:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/mysql/app/schemas/
+
+services:
+  mysql:
+    hostname: mysql
+    container_name: mysql
+    image: mysql
+    command: 
+    - "mysqld"
+    - "--character-set-server=utf8mb4" 
+    - "--collation-server=utf8mb4_unicode_ci"
+    environment:
+      MYSQL_ROOT_PASSWORD: local 
+    volumes:
+      - "mysql_schemas:/docker-entrypoint-initdb.d"
+    healthcheck:
+      test: 
+      - "CMD"
+      - "mysqladmin"
+      - "-uroot"
+      - "-plocal"
+      - "ping"
+      - "-h"
+      - "localhost"
+      timeout: 10s
+        #    volumes:
+        #    - type: "bind"
+        #      source: "${PWD}/mysql/app/schemas/"
+        #      target: "/docker-entrypoint-initdb.d"
+
+  mysql-adminer:
+    hostname: mysql-adminer
+    container_name: mysql-adminer
+    image: adminer:latest 
+    environment:
+      ADMINER_DEFAULT_SERVER: mysql
+    ports:
+      - 8080:8080

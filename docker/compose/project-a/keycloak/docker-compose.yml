@@ -1,0 +1,36 @@
+version: '3.2'
+
+services:
+  keycloak:
+    hostname: keycloak
+    container_name: keycloak
+    restart: always
+    build:
+      context: './'
+      dockerfile: '${PWD}/keycloak/app/docker'
+    environment:
+      KEYCLOAK_DATASOURCE_URL: 'jdbc:mysql://mysql:3306/keycloak'
+      KC_DB_USERNAME: 'root'
+      KC_DB_PASSWORD: 'local'
+      KC_HOSTNAME_HTTPS_STRICT: 'false'
+      KC_HOSTNAME_STRICT: 'false'
+      KC_LOG_LEVEL: 'info'
+      KC_PROXY: 'edge'
+      KC_HTTP_ENABLED: 'true'
+      KC_HOST_NAME: '/keycloak'
+      KEYCLOAK_ADMIN: 'root' 
+      KEYCLOAK_ADMIN_PASSWORD: 'local'
+      REDIRECT_SOCKET: 'proxy-https'
+      PROXY_ADDRESS_FORWARDING: 'true'
+    ports:
+      - '8443:8443'
+    depends_on:
+      - 'mysql'
+    healthcheck:
+      test: 
+        - "CMD"
+        - "curl -f"
+        - "http://localhost:8080/keycloak/"
+      interval: '5s'
+      timeout: '2s'
+      retries: '15'

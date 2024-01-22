@@ -1,0 +1,41 @@
+ ____  _                          ____ _                 _ 
+/ ___|| |_ _ __ ___  _ __   __ _ / ___| | ___  _   _  __| |
+\___ \| __| '__/ _ \| '_ \ / _` | |   | |/ _ \| | | |/ _` |
+ ___) | |_| | | (_) | | | | (_| | |___| | (_) | |_| | (_| |
+|____/ \__|_|  \___/|_| |_|\__, |\____|_|\___/ \__,_|\__,_|
+                           |___/                           
+
+# STRUCTURE
+.
+├── help
+│   ├── git.sh
+│   ├── log.sh
+│   ├── misc.sh
+│   └── readme
+├── makefile
+├── mysql
+├── nginx
+│   ├── app
+│   │   ├── conf.d
+│   │   │   ├── common.conf
+│   │   │   ├── commonLocation.conf
+│   │   │   └── ssl.conf
+│   │   ├── docker
+│   │   ├── nginx.conf
+│   │   └── vhosts
+│   │       ├── iredmail.conf
+│   │       ├── keycloak.conf
+│   │       └── nextcloud.conf
+│   ├── docker-compose.yml
+│   └── readme
+└── readme
+
+
+# NOTES
+
+# new orphan bbranch
+git switch --orphan BRANCH
+git commit --allow-empty -m "initial commit"
+git switch main
+git worktree add BRANCH BRANCH
+git worktree add --track -b mysql mysql origin/mysql

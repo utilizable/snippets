@@ -1,0 +1,52 @@
+version: '3.7'
+volumes:
+  nginx_confd:
+    driver: 'local'
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '${PWD}/nginx/app/conf.d/'
+  nginx_vhosts:
+    driver: 'local'
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '${PWD}/nginx/app/vhosts/'
+  nginx_conf:
+    driver: 'local'
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '${PWD}/nginx/app/nginx.conf'
+
+services:
+  nginx:
+    hostname: nginx
+    container_name: nginx
+    build:
+      context: './'
+      dockerfile: '${PWD}/nginx/app/docker'
+    ports:
+      - '80:80'
+      - '443:443'
+    restart: always
+    volumes:
+      - 'nginx_confd:/etc/nginx/conf.d/'
+      - 'nginx_vhosts:/etc/nginx/vhosts/'
+      - type: bind
+        source: '${PWD}/nginx/app/nginx.conf'
+        target: '/etc/nginx/nginx.conf'
+    healthcheck:
+      test: 
+        - "CMD"
+        - "service" 
+        - "nginx"
+        - "status"
+      interval: '5s'
+      timeout: '2s'
+      retries: '15'
+    extra_hosts:
+      #keycloak: 127.0.0.1
+      iredmail: 127.0.0.1
+      nextcloud: 127.0.0.1
+      nextcloud-nginx: 127.0.0.1
