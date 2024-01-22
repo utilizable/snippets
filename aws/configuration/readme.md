@@ -48,3 +48,22 @@ Create separate configuration files per environment.
 ```ps
 (aws eks update-kubeconfig --name "${CLUSTER_NAME}" --kubeconfig "$env:USERPROFILE/.kube/${ALIAS}" --profile "${WORKING_PROFILE}" --alias "${ALIAS}") -and (kubectl --kubeconfig "$env:USERPROFILE/.kube/${ALIAS}" config set-context --current --namespace "${NAMESPACE}")  
 ```
+
+## Tips
+
+In case when you trying to connect into EKS from heavy secured comapny, you need to use some proxy settings.
+
+```sh
+export no_proxy=localhost,127.0.0.0,127.0.1.1,127.0.1.1,local.home,.https://eks.amazonaws.com,.https://organization.com,organization.com
+```
+You can use [px](https://github.com/genotrance/px) tool to sustain proxy connection
+
+```ps
+taskkill /F /IM px.exe
+timeout 1
+Start-Process -NoNewWindow -FilePath %USERPROFILE%/Downloads/px.exe
+$env:HTTP_PROXY="http://localhost:3128"
+$env:HTTPS_PROXY="http://localhost:3128"
+$Env:no_proxy="localhost,127.0.0.0,127.0.1.1,127.0.1.1,local.home,.eks.amazonaws.com,"   
+```
+
