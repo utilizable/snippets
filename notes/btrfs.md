@@ -20,10 +20,12 @@ NOTES - BTRFS
   - How to restore:
     
     - Boot to previous snapshot
-    - ```sh
-      cat /etc/fstab                                                # search for partition which is mounted as /
-      mount /dev/sda3 /mnt                                          # mount this partition into /mnt
-      mv /mnt/@rootfs /mnt/@rootfs.broken                           # move broken subvolume into *.broken
-      btrfs send /snapshots/SNAPSHOT | btrfs receive /mnt/@rootfs   # send our backup snapshot into @rootfs
-      btrfs property set -ts /mnt/@rootfs ro false                  # make sure that rootfs subvolume is in Read Write mode
+    - Example workflow:
+      
+      ```sh
+      cat /etc/fstab                                                # 1. search for partition which is mounted as /
+      mount /dev/sda3 /mnt                                          # 2. mount this partition into /mnt
+      mv /mnt/@rootfs /mnt/@rootfs.broken                           # 3. move broken subvolume into *.broken
+      btrfs send /snapshots/SNAPSHOT | btrfs receive /mnt/@rootfs   # 4. send our backup snapshot into @rootfs
+      btrfs property set -ts /mnt/@rootfs ro false                  # 5. make sure that rootfs subvolume is in Read Write mode
       ```
