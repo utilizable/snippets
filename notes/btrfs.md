@@ -8,6 +8,7 @@ NOTES - BTRFS
 - https://medium.com/@inatagan/installing-debian-with-btrfs-snapper-backups-and-grub-btrfs-27212644175f
 - https://github.com/Antynea/grub-btrfs / https://github.com/Antynea/grub-btrfs/tree/feature/ubuntu-init
 - https://unix.stackexchange.com/questions/149932/how-to-make-a-btrfs-snapshot-writable
+- https://wiki.archlinux.org/title/Btrfs#Multi-device_file_system 
 
 ## 💡 Tips
 
