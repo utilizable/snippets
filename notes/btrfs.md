@@ -28,4 +28,8 @@ NOTES - BTRFS
       mv /mnt/@rootfs /mnt/@rootfs.broken                           # 3. move broken subvolume into *.broken
       btrfs send /snapshots/SNAPSHOT | btrfs receive /mnt/@rootfs   # 4. send our backup snapshot into @rootfs
       btrfs property set -ts /mnt/@rootfs ro false                  # 5. make sure that rootfs subvolume is in Read Write mode
+      # --
+
+      btrfs property set -f -ts /mnt/@rootfs.broken ro false        # . setup RW property
+      btrfs su delete /mnt/@rootfs.broken                           # . delete subvolume
       ```
