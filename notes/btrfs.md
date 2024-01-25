@@ -7,6 +7,7 @@ NOTES - BTRFS
 - https://amedeos.github.io/backup/2021/08/18/Use-btrbk-for-backup-on-btrfs.html
 - https://medium.com/@inatagan/installing-debian-with-btrfs-snapper-backups-and-grub-btrfs-27212644175f
 - https://github.com/Antynea/grub-btrfs / https://github.com/Antynea/grub-btrfs/tree/feature/ubuntu-init
+- https://unix.stackexchange.com/questions/149932/how-to-make-a-btrfs-snapshot-writable
 
 ## 💡 Tips
 
@@ -14,3 +15,14 @@ NOTES - BTRFS
   - The best option is to have separate boot partition, in a case of error's you can use Antynea/grub-btrfs utility to boot into previous snapshot and preform rollback,
   - `btrbk` give's you posibility to sync. snapshots with remotes,
   - You can boot your snapshot as [systemd-nspawn](https://wiki.archlinux.org/title/Systemd-nspawn#Use_Btrfs_subvolume_as_container_root) container,
+
+  - How to restore,
+    - Boot to previous snapshot
+      
+    - ```sh
+      cat /etc/fstab                                                # search for partition which is mounted as /
+      mount /dev/sda3 /mnt                                          # mount this partition into /mnt
+      mv /mnt/@rootfs /mnt/@rootfs.broken                           # move broken subvolume into *.broken
+      btrfs send /snapshots/SNAPSHOT | btrfs receive /mnt/@rootfs   # send our backup snapshot into @rootfs
+      btrfs property set -ts /mnt/@rootfs ro false                  # make sure that rootfs subvolume is in Read Write mode
+      ```
