@@ -11,14 +11,14 @@ NOTES - BTRFS
 
 ## 💡 Tips
 
-  - Nested subvolumes are skiped - you can use this technique to save space (eg. excluding /var/logs by creating @logs subovlume and attached it into /var/logs),
-  - The best option is to have separate boot partition, in a case of error's you can use Antynea/grub-btrfs utility to boot into previous snapshot and preform rollback,
-  - `btrbk` give's you posibility to sync. snapshots with remotes,
-  - You can boot your snapshot as [systemd-nspawn](https://wiki.archlinux.org/title/Systemd-nspawn#Use_Btrfs_subvolume_as_container_root) container,
+  - Nested subvolumes are skiped - you can use this technique to save space (eg. excluding /var/logs by creating @logs subovlume and attached it into /var/logs)
+  - The best option is to have separate boot partition, in a case of error's you can use Antynea/grub-btrfs utility to boot into previous snapshot and preform rollback
+  - `btrbk` give's you posibility to sync. snapshots with remotes
+  - You can boot your snapshot as [systemd-nspawn](https://wiki.archlinux.org/title/Systemd-nspawn#Use_Btrfs_subvolume_as_container_root) container
 
-  - How to restore,
+  - How to restore:
+    
     - Boot to previous snapshot
-      
     - ```sh
       cat /etc/fstab                                                # search for partition which is mounted as /
       mount /dev/sda3 /mnt                                          # mount this partition into /mnt
